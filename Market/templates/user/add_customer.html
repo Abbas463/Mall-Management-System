@@ -1,0 +1,53 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Add Customer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Add Customer</h2>
+        <a href="{{ url_for('user.dashboard') }}" class="btn btn-sm">Back to Dashboard</a>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('user.add_customer') }}">
+            <div class="form-group">
+                <label for="name">Customer Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <button type="submit" class="btn">Add Customer</button>
+        </form>
+
+        <div style="margin-top: 30px;">
+            <h3>Your Customers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.phone or '-' }}</td>
+                        <td>{{ customer.email or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

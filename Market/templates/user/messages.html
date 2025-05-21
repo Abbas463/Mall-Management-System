@@ -1,0 +1,45 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Your Messages</h2>
+    </div>
+    <div class="card-body">
+        <div style="margin-bottom: 30px;">
+            <h3>Send Message to Admin</h3>
+            <form method="POST" action="{{ url_for('user.messages') }}">
+                <div class="form-group">
+                    <textarea class="form-control" name="message" rows="3" required placeholder="Type your message here..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Send Message</button>
+            </form>
+        </div>
+
+        <h3>Message History</h3>
+        <div style="max-height: 400px; overflow-y: auto;">
+            {% for message in messages %}
+            <div style="padding: 15px; margin-bottom: 10px; border-radius: 5px;
+                        background-color: {% if message.sender_type == 'Admin' %}#e3f2fd{% else %}#e8f5e9{% endif %};">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <strong>{{ message.sender_type }}</strong>
+                    <small>{{ message.date.strftime('%d %b %Y %H:%M') }}</small>
+                </div>
+                <p>{{ message.message }}</p>
+                {% if message.sender_type == 'Admin' %}
+                <div style="text-align: right; margin-top: 10px;">
+                    <a href="{{ url_for('user.messages') }}?reply_to={{ message.id }}" class="btn btn-sm btn-primary">Reply</a>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div style="padding: 15px; text-align: center; color: #7f8c8d;">
+                No messages yet
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

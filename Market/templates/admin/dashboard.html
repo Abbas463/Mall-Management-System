@@ -1,0 +1,128 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Admin Dashboard</h2>
+    </div>
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">{{ total_users }}</p>
+            </div>
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">{{ "%.2f"|format(total_sales) }}</p>
+            </div>
+            <div class="card">
+                <h3>Pending Warnings</h3>
+                <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">{{ pending_warnings }}</p>
+            </div>
+            <div class="card">
+                <h3>Unread Messages</h3>
+                <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">{{ unread_messages }}</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Users</h3>
+                    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-sm">View All</a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Shop No.</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recent_users %}
+                        <tr>
+                            <td>{{ user.full_name }}</td>
+                            <td>{{ user.shop_number }}</td>
+                            <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Sales</h3>
+                    <a href="{{ url_for('admin.view_sales') }}" class="btn btn-sm">View All</a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Shop</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in recent_sales %}
+                        <tr>
+                            <td>{{ sale.shop_number }}</td>
+                            <td>{{ "%.2f"|format(sale.total_amount) }}</td>
+                            <td>{{ sale.date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Payments</h3>
+                <a href="{{ url_for('admin.view_payments') }}" class="btn btn-sm">View All</a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in recent_payments %}
+                    <tr>
+                        <td>{{ payment.full_name }} ({{ payment.shop_number }})</td>
+                        <td>{{ payment.type|capitalize }}</td>
+                        <td>{{ "%.2f"|format(payment.amount) }}</td>
+                        <td>
+                            {% if payment.status == 'paid' %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h3 class="card-title">Quick Actions</h3>
+            </div>
+            <div style="display: flex; gap: 15px; padding: 20px;">
+                <a href="{{ url_for('admin.add_user') }}" class="btn">Add User</a>
+                <a href="{{ url_for('admin.send_warning') }}" class="btn btn-danger">Send Warning</a>
+                <a href="{{ url_for('admin.send_message_to_user') }}" class="btn btn-success">Send Message</a>
+                <a href="{{ url_for('admin.view_messages') }}" class="btn btn-info">View Messages</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

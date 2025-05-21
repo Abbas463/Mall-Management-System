@@ -1,0 +1,20 @@
+{% extends "auth/base.html" %}
+
+{% block title %}View Balance{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Your Account Balance</h2>
+        <a href="{{ url_for('user.dashboard') }}" class="btn btn-sm">Back to Dashboard</a>
+    </div>
+    <div class="card-body">
+        <div style="text-align: center; padding: 40px 0;">
+            <h3 style="font-size: 18px; color: #7f8c8d; margin-bottom: 10px;">Current Balance</h3>
+            <p style="font-size: 36px; font-weight: bold; color: {% if balance >= 0 %}#2ecc71{% else %}#e74c3c{% endif %};">
+                {{ "%.2f"|format(balance) }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

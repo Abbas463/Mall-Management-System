@@ -1,0 +1,48 @@
+{% extends "auth/base.html" %}
+
+{% block title %}View Sales{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">View Sales</h2>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.view_sales') }}" style="margin-bottom: 20px;">
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label for="shop_number" style="margin-bottom: 0;">Filter by Shop:</label>
+                <select class="form-control" id="shop_number" name="shop_number" style="width: 200px;">
+                    <option value="">All Shops</option>
+                    {% for shop in shops %}
+                    <option value="{{ shop.shop_number }}" {% if shop.shop_number == selected_shop %}selected{% endif %}>{{ shop.shop_number }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-sm">Filter</button>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Shop</th>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>{{ sale.id }}</td>
+                    <td>{{ sale.shop_number }}</td>
+                    <td>{{ sale.user_name }}</td>
+                    <td>{{ "%.2f"|format(sale.total_amount) }}</td>
+                    <td>{{ sale.date.strftime('%d %b %Y %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

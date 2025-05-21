@@ -1,0 +1,179 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Invoice #{{ sale.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .invoice-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    .invoice-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .invoice-details {
+        text-align: right;
+    }
+    .invoice-details p {
+        margin: 5px 0;
+        color: #7f8c8d;
+    }
+    .invoice-company {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .invoice-from-to {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    .invoice-from, .invoice-to {
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 4px;
+    }
+    .invoice-from h3, .invoice-to h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+    .invoice-table th {
+        background: #f8f9fa;
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    .invoice-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+    }
+    .invoice-total {
+        text-align: right;
+        margin-top: 20px;
+    }
+    .invoice-total table {
+        display: inline-block;
+    }
+    .invoice-total td {
+        padding: 8px 15px;
+    }
+    .invoice-total td:first-child {
+        font-weight: 600;
+        text-align: right;
+    }
+    .invoice-footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        text-align: center;
+        color: #7f8c8d;
+    }
+    .print-btn {
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="invoice-container">
+    <div class="invoice-header">
+        <div>
+            <div class="invoice-company">Market Management System</div>
+            <p>Shop No: {{ session.shop_number }}</p>
+        </div>
+        <div class="invoice-details">
+            <div class="invoice-title">INVOICE</div>
+            <p>#{{ sale.id }}</p>
+            <p>{{ sale.date.strftime('%d %b %Y %H:%M') }}</p>
+        </div>
+    </div>
+
+    <div class="invoice-from-to">
+        <div class="invoice-from">
+            <h3>From:</h3>
+            <p><strong>{{ sale.seller_name }}</strong></p>
+            <p>Shop No: {{ sale.shop_number }}</p>
+        </div>
+        <div class="invoice-to">
+            <h3>To:</h3>
+            {% if sale.customer_name %}
+                <p><strong>{{ sale.customer_name }}</strong></p>
+                {% if sale.customer_phone %}<p>Phone: {{ sale.customer_phone }}</p>{% endif %}
+                {% if sale.customer_email %}<p>Email: {{ sale.customer_email }}</p>{% endif %}
+            {% else %}
+                <p><strong>Walk-in Customer</strong></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.product_name }}</td>
+                <td>{{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ "%.2f"|format(item.price * item.quantity) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="invoice-total">
+        <table>
+            <tr>
+                <td>Subtotal:</td>
+                <td>{{ "%.2f"|format(sale.total_amount) }}</td>
+            </tr>
+            <tr>
+                <td>Tax (0%):</td>
+                <td>0.00</td>
+            </tr>
+            <tr>
+                <td><strong>Total Amount:</strong></td>
+                <td><strong>{{ "%.2f"|format(sale.total_amount) }}</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="invoice-footer">
+        <p>Thank you for your business!</p>
+        <p>For any queries, please contact the shop owner</p>
+    </div>
+
+    <div class="print-btn">
+        <button onclick="window.print()" class="btn">Print Invoice</button>
+    </div>
+</div>
+{% endblock %}

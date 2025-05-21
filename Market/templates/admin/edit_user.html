@@ -1,0 +1,41 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Edit User</h2>
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-sm">Back to Users</a>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" value="{{ user.password }}" required>
+            </div>
+            <div class="form-group">
+                <label for="full_name">Full Name</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.full_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="shop_number">Shop Number</label>
+                <input type="text" class="form-control" id="shop_number" name="shop_number" value="{{ user.shop_number }}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user.email or '' }}">
+            </div>
+            <button type="submit" class="btn">Update User</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

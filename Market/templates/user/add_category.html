@@ -1,0 +1,39 @@
+{% extends "auth/base.html" %}
+
+{% block title %}Add Category{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Add Product Category</h2>
+        <a href="{{ url_for('user.dashboard') }}" class="btn btn-sm">Back to Dashboard</a>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('user.add_category') }}">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input type="text" class="form-control" id="name" name="name" required placeholder="Enter category name">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+
+        <div style="margin-top: 30px;">
+            <h3>Your Categories</h3>
+            {% if categories %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                {% for category in categories %}
+                <div style="padding: 15px; border: 1px solid #eee; border-radius: 5px;">
+                    <h4>{{ category.name }}</h4>
+                    <small>Created: {{ category.created_at.strftime('%d %b %Y') }}</small>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="padding: 15px; text-align: center; color: #7f8c8d;">
+                No categories created yet
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

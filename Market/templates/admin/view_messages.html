@@ -1,0 +1,41 @@
+{% extends "auth/base.html" %}
+
+{% block title %}View Messages{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">User Messages</h2>
+        <a href="{{ url_for('admin.send_message_to_user') }}" class="btn btn-success">Send New Message</a>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+        <div style="max-height: 500px; overflow-y: auto;">
+            {% for message in messages %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>{{ message.user_name }}</strong> (Shop: {{ message.shop_number }})
+                        </div>
+                        <small>{{ message.date.strftime('%d %b %Y %H:%M') }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ message.message }}</p>
+                    <div class="text-end">
+                        <a href="{{ url_for('admin.send_message_to_user') }}?user_id={{ message.receiver_id }}" 
+                           class="btn btn-primary btn-sm">Reply</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No messages from users yet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
